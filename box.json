@@ -1,0 +1,10 @@
+{
+  "files": [
+    "README.md",
+    "VERSION",
+    "LICENSE"
+  ],
+  "directories" : [ "src" ],
+  "stub": "src/querystring.php",
+  "output": "querystring.phar"
+}

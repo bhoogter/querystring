@@ -1,0 +1,24 @@
+language: php
+branches:
+  only:
+  - master
+  - "/^.*[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+.*$/"
+php:
+- '7.2'
+script: phpunit --bootstrap src/stub.php --test-suffix '-test.php,Test.php,.phpt'
+  tests
+notifications:
+  email: false
+before_deploy:
+- composer phar:install-tools
+- composer install --prefer-dist --no-dev --no-interaction
+- php box.phar build
+deploy:
+  provider: releases
+  file: querystring.phar
+  skip_cleanup: true
+  api_key:
+    secure: EF8qewJ3ZlR3sBNqu+5NFDX+7oyAQZmmnsAbsNJ4zgig0sIrCowan+Ks652v3c9om2bx9Bsf7jOsZGjK9wD3SkT7uq/38RF+FElUyFob19LP5WMe/37RqioLkp9RmPJLNtw2r8UneL++Luw9hK3k41vtdIcinbXL+bgMrqlr83E5mxfiwTlaZEf6agRf7kiohHkUpH3rAsGaONee7b6Q+bj3KklYgbBTdHdkfYwhvk2X68rTEwJruvYqe1+GYX/Nq2FesNHNDKqBZr5aBd4fVnFFT1e26PwwoAVLIcnwZmaR+dYjJSPCGg4PeOt4yfKg09Mpg8Ccr9nnMgSWbq/SE1uLc0WmfdWortE7rAXzGaxJSpgj0P3erVg4TT8qe8YgvIeIo3thajFE3J/GOdsCcmSY8YUxVgGJuowJiM2+Y1X0mWGGHvP9wIhI7H8Jhwpw4gxVzzk0x3tld1Yq1+hiR8iyyVq93O6q/Fsq9BOiIUsC1CEOJq9lq6ktekZ97UJOsstDpNdpXKe6k1LJDLMQHg+oFLQohA5HTagTtscr4yhCq80c5nJKZwSrbqE4zYlcQzsjify3Dwwr1ioSNVD+rOM0R3q3LGqZ5la9dVavrHV4rxLCn/3Qz3mv8D/L1cyBOkzF4+Wypc1/6mwZj518rtwCXFXxyF3msOEuGYT9r9Q=
+  on:
+    repo: bhoogter/querystring
+    tags: true

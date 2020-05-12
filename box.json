@@ -5,6 +5,6 @@
     "LICENSE"
   ],
   "directories" : [ "src" ],
-  "stub": "src/querystring.php",
+  "stub": "src/stub.php",
   "output": "querystring.phar"
 }

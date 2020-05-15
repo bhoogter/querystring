@@ -30,6 +30,8 @@ class pages_test extends TestCase
     public function testOverwrite(): void {
         $s = "?z=1";
         $this->assertEquals("?z=2", querystring::add($s, "z", "2"));
+        $t = "user=mark";
+        $this->assertEquals("user=jim", querystring::add($t, "user", "jim"));
     }
 
     public function testDualOverwrite(): void {

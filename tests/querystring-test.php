@@ -26,4 +26,15 @@ class pages_test extends TestCase
         $this->assertEquals("3", querystring::get($s, "b"));
         $this->assertEquals("?a=m&f=4444&a=mm&a=mmm", querystring::del($s, "b"));
     }
+
+    public function testOverwrite(): void {
+        $s = "?z=1";
+        $this->assertEquals("?z=2", querystring::add($s, "z", "2"));
+    }
+
+    public function testDualOverwrite(): void {
+        $s = "?a=1&b=2";
+        $this->assertEquals("?b=2&a=4", querystring::add($s, "a", "4"));
+        $this->assertEquals("?a=1&b=5", querystring::add($s, "b", "5"));
+    }
 }

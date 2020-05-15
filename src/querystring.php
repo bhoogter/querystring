@@ -2,16 +2,14 @@
 
 class querystring
 {
+    public static function hqm($s) { return is_string($s) && $s[0]=='?'; }
+    public static function rqm($s) { return ('' . $s == '') ? '' : ((@$s[0] == "?") ? substr($s, 1) : $s); }
     public static function aqm($s)
     {
         if ($s == "") return $s;
         if (substr($s, 0, 7) == "http://" || substr($s, 0, 8) == "https://")
             return strstr($s, "?") == "?" ? $s : $s . "?";
         return (($s[0] == "?") ? "" : "?") . $s;
-    }
-    public static function rqm($s)
-    {
-        return ('' . $s == '') ? '' : ((@$s[0] == "?") ? substr($s, 1) : $s);
     }
     public static function pparse($str)
     {
@@ -50,6 +48,7 @@ class querystring
 
     static function set($url, $key, $value = null)
     {
+        $had_qm = self::hqm($url);
         if ($value == null) {
             $value = $key;
             $key = $url;
@@ -61,8 +60,9 @@ class querystring
         $url = substr($url, 0, -1);
         if ($value == "") return $url;
         if (substr($url, strlen($url) - 1) == '?') $url = $url . $key . '=' . $value;
-        else $url = ($url . '&' . $key . '=' . $value);
+        else $url = ($url . ($url==''?'':'&') . $key . '=' . $value);
         //print "<br/>url=$url";
+        $url = $had_qm ? self::aqm($url) : self::rqm($url);
         return $url;
     }
 

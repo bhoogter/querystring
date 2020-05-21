@@ -49,10 +49,12 @@ class querystring
     static function set($url, $key, $value = null)
     {
         $had_qm = self::hqm($url);
-        if ($value == null || $value == '') {
+        if (!is_string($value) && $value == null) {
             $value = $key;
             $key = $url;
             $url = @$_SERVER['QUERY_STRING'];
+        } else if ($value == '') {
+            return self::del($url, $key);
         }
         if ($url != "") $url = self::aqm($url);
         if ($key == "") return $url;

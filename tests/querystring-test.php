@@ -39,4 +39,16 @@ class pages_test extends TestCase
         $this->assertEquals("?b=2&a=4", querystring::add($s, "a", "4"));
         $this->assertEquals("?a=1&b=5", querystring::add($s, "b", "5"));
     }
+    
+    public function testMultiWrite(): void {
+        $r = "?id=5";
+        $r = querystring::add($r, '_ZN', "options");
+        $r = querystring::add($r, '_ZM', "display");
+        $r = querystring::add($r, '_Zmod', "r");
+        $r = querystring::add($r, '_Zprefix', "t");
+        $r = querystring::add($r, '_Ztemp', "temp");
+        
+        $this->assertEquals("?id=5&_ZN=options&_ZM=display&_Zmod=r&_Zprefix=t&_Ztemp=temp", $r);
+    }
+
 }

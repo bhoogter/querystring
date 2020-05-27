@@ -51,4 +51,16 @@ class pages_test extends TestCase
         $this->assertEquals("?id=5&_ZN=options&_ZM=display&_Zprefix=t&_Ztemp=temp", $r);
     }
 
+    public function testPop(): void {
+        $r = "?id=5&ie=6&if=7";
+        $v1 = querystring::get($r, 'ie');
+        $v2 = querystring::zap($r, 'ie');
+        $v3 = querystring::get($r, 'ie');
+
+        $this->assertEquals('6', $v1);
+        $this->assertEquals('6', $v2);
+        $this->assertEquals('', $v3);
+        $this->assertEquals($r, "?id=5&if=7");
+    }
+
 }

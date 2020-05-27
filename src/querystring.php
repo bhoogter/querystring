@@ -11,6 +11,26 @@ class querystring
             return strstr($s, "?") == "?" ? $s : $s . "?";
         return (($s[0] == "?") ? "" : "?") . $s;
     }
+
+    private static function qs() { 
+        $v = @$_SERVER['QUERY_STRING']; 
+        return $v ? $v : '';
+    }
+    private static function shift2qs(&$a, &$b)
+    {
+        // print "\nSHIFT2";
+        $b = $a;
+        $a = self::qs();
+    }
+
+    private static function shift3qs(&$a, &$b, &$c)
+    {
+        // print "\nSHIFT3";
+        $c = $b;
+        $b = $a;
+        $a = self::qs();
+    }
+
     public static function pparse($str)
     {
         if (!is_string($str) || $str == '') return array();
@@ -37,11 +57,7 @@ class querystring
 
     public static function get($url, $key = null)
     {
-        if ($key == null) {
-            $key = $url;
-            $url = @$_SERVER['QUERY_STRING'];
-        }
-
+        if ($key == null) self::shift2qs($url, $key);
         $output = querystring::pparse($url);
         return isset($output[$key]) ? $output[$key] : "";
     }
@@ -49,13 +65,9 @@ class querystring
     static function set($url, $key, $value = null)
     {
         $had_qm = self::hqm($url);
-        if (!is_string($value) && $value == null) {
-            $value = $key;
-            $key = $url;
-            $url = @$_SERVER['QUERY_STRING'];
-        } else if ($value == '') {
-            return self::del($url, $key);
-        }
+        if (!is_string($value) && $value == null) self::shift3qs($url, $key, $value);
+        else if ($value == '') return self::del($url, $key);
+
         if ($url != "") $url = self::aqm($url);
         if ($key == "") return $url;
         $url = preg_replace('/(.*)(\?|&)' . $key . '=[^&]*?(&)(.*)/i', '$1$2$4', $url . '&');
@@ -70,10 +82,7 @@ class querystring
 
     static function del($url, $key = null)
     {
-        if ($key == null) {
-            $key = $url;
-            $url = @$_SERVER['QUERY_STRING'];
-        }
+        if ($key == null) self::shift2qs($url, $key);
         $url = self::aqm($url);
         //print "<br/>remove_querystring_var($url, $key)";
         $url = preg_replace('/(.*)(\?|&)' . $key . '=[^&]*?(&)(.*)/i', '$1$2$4', $url . '&');
@@ -83,4 +92,13 @@ class querystring
 
     static function remove($url, $key) { return self::del($url, $key); }
     static function add($url, $key, $value) { return self::set($url, $key, $value); }
+
+    static function zap(&$url, $key) { return self::pop($url, $key); }
+    static function pop(&$url, $key)
+    {
+        if ($key == null) self::shift2qs($url, $key);
+        $v = self::get($url, $key);
+        $url = self::del($url, $key);
+        return $v;
+    }
 }

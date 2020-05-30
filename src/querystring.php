@@ -9,7 +9,7 @@ class querystring
         if ($s == "") return $s;
         if (substr($s, 0, 7) == "http://" || substr($s, 0, 8) == "https://")
             return strstr($s, "?") == "?" ? $s : $s . "?";
-        return (($s[0] == "?") ? "" : "?") . $s;
+        return ((substr($s, 0, 1) == "?") ? "" : "?") . $s;
     }
 
     private static function qs() { 

@@ -2,7 +2,7 @@
 
 class querystring
 {
-    public static function hqm($s) { return is_string($s) && $s[0]=='?'; }
+    public static function hqm($s) { return is_string($s) && substr($s, 0, 1) == '?'; }
     public static function rqm($s) { return ('' . $s == '') ? '' : ((@$s[0] == "?") ? substr($s, 1) : $s); }
     public static function aqm($s)
     {
